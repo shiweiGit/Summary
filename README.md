@@ -138,13 +138,100 @@
 	// //字符串对象转为对象
 	// console.log(eval("("+objStr+")"));  
 	
-##window 对象有JSON对象，JSON有两个方法  
+##window 对象有JSON对象，JSON有两个方法    
+
 	//将JSON对象转为JSON字符串
 	JSON.stringify(obj)
 	JSON.stringify(ary) //数组也是对象，也可以转
 	
 	//将JSON字符串转为JSON对象
 	JSON.parse(str)
+	
+## 重写数组方法  
+	//var ary=[1,2,3,4,5];
+
+	//末尾出去一个,并返回当前弹出元素
+	// Array.prototype.pop=function(){
+	// 	var num = this[this.length-1];
+	// 	this.length--;
+	// 	return num;
+	// }
+
+	// console.log(ary);
+	// ary.pop();
+	// console.log(ary);
+
+	//末尾进来一个或者多个
+	// Array.prototype.push=function(){
+	// 	for(var i=0;i<arguments.length;i++){
+	// 		this[this.length] = arguments[i];
+	// 	}
+	// }
+
+	// ary.push(4,5);
+	// console.log(ary);
+
+	
+	// Array.prototype.shift=function(){
+	// 	var num = this[0];
+	// 	for(var i=1;i<this.length;i++){
+	// 		this[i-1]=this[i];
+	// 	}
+	// 	this.length--;
+	// 	return num;
+	// }
+
+	// //前面出去一个,并返回当前元素
+	// ary.shift();
+	// console.log(ary);
+
+	
+	// Array.prototype.unshift=function(){
+	// 	var str='';
+	//两数组拼接
+	// 	for(var i=0;i<arguments.length;i++){
+	// 		str+=arguments[i]+',';
+	// 	}
+
+	// 	for(var i=0;i<this.length;i++){
+	// 		str+=this[i]+',';
+	// 	}
+	// 	字符串转换为数组
+	// 	var ary= eval("["+str+"]");
+	// 	this.length = ary.length;
+	
+	//将新数组赋值回原数组，达到改变原数组的目的
+	// 	for(var i=0;i<ary.length;i++){
+	// 		this[i]=ary[i];
+	// 	}
+	// 	return ary.length;
+	// }
+
+	// // //前面进来一个或者多个,并返回元素的长度
+	//  console.log(ary.unshift(0,1));
+	//  console.log(ary);
+ 
+## 重写call方法  
+	function fn(){
+		console.log(this);
+	}
+	var obj={"name":"shi"};
+	Function.prototype.call=function(){
+		//参数为空执行，执行当前函数
+		if(arguments == undefined){
+			this();
+		}else{
+			//如果传进来的第一个参数不是对象，将第一个参数转换为对象
+			var obj = Object(arguments[0]);
+			//在对象所属类的原型上添加fn方法
+			obj.__proto__.fn = this;
+			//执行
+			obj.fn();
+			//使用完之后删除
+			delete obj.fn;
+		}
+	}
+	fn.call(obj,1,2,3);
 
 ## 定时器是异步的，定时器使用完，不在使用的时候清除定时器  		
 ### 下面通过一个实例说明一下对象与函数的关系
